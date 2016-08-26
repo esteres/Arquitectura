@@ -1,0 +1,74 @@
+/*
+ * main implementation: use this 'C' sample to create your own application
+ *
+ */
+
+#include "derivative.h" /* include peripheral declarations */
+
+
+#define GREEN_LED  0x00000010
+#define BLUE_LED  0x00000004
+#define RED_LED  0x00000008
+
+#define RED_LED_OFF  GPIOC_PSOR = RED_LED
+#define RED_LED_ON   GPIOC_PCOR = RED_LED
+#define GREEN_LED_OFF  GPIOD_PSOR = GREEN_LED
+#define GREEN_LED_ON   GPIOD_PCOR = GREEN_LED
+#define BLUE_LED_OFF  GPIOA_PSOR = BLUE_LED
+#define BLUE_LED_ON   GPIOA_PCOR = BLUE_LED
+
+#define T_DELAY		2000000
+
+void Delay(int Ticks){
+ int i;
+ for(i=0;i<Ticks;i++) {}
+}
+
+int main(void){
+	
+	/* Configuración del Puerto PTC3  -> Led Rojo */
+	SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK; 
+	PORTC_PCR3 = PORT_PCR_MUX(1) | PORT_PCR_DSE_MASK;
+	GPIOC_PDDR |=  RED_LED;
+	
+	/* Configuración del Puerto PTD4 ->  Led Verde */
+	SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK; 
+	PORTD_PCR4 = PORT_PCR_MUX(1) | PORT_PCR_DSE_MASK;
+	GPIOD_PDDR |=  GREEN_LED;
+	
+	/* Configuración del Puerto PTA2 ->  Led Azul */
+	SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK; 
+	PORTA_PCR2 = PORT_PCR_MUX(1) | PORT_PCR_DSE_MASK;
+	GPIOA_PDDR |=  BLUE_LED;
+	
+	RED_LED_OFF; 
+	GREEN_LED_OFF; 
+	BLUE_LED_OFF; 
+
+	for(;;){
+		RED_LED_ON;
+		Delay(T_DELAY);
+		RED_LED_OFF;
+		Delay(T_DELAY);
+		
+		GREEN_LED_ON;
+		Delay(T_DELAY);
+		GREEN_LED_OFF;
+		Delay(T_DELAY);
+				
+		BLUE_LED_ON;
+		Delay(T_DELAY);
+		BLUE_LED_OFF;
+		Delay(T_DELAY);
+						
+		RED_LED_ON;
+		BLUE_LED_ON;
+		GREEN_LED_ON;
+			Delay(T_DELAY);
+		RED_LED_OFF;
+		GREEN_LED_OFF;
+		BLUE_LED_OFF;
+		Delay(T_DELAY);
+	}
+	return 0;
+}
